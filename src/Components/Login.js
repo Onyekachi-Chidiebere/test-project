@@ -2,7 +2,6 @@ import React,{useState,useEffect} from 'react';
 import {Person,Lock} from '@material-ui/icons';
 import { Redirect,Link } from 'react-router-dom';
 
-export let token = false
 const Login =()=>{
     
     const [username,setUsername] = useState('');
@@ -14,6 +13,12 @@ const Login =()=>{
     const handleLogin =async(e)=>{
         e.preventDefault()
     let Users = JSON.parse(localStorage.getItem('Users'));
+    if(username===''||password===''){
+        setError('Missing Credentials')
+        setTimeout(()=>{setError(false)},5000)
+        console.log('Missing Credentials')
+        return;
+    }
     if(!Users){
         setError('Invalid User')
         setTimeout(()=>{setError(false)},5000)
@@ -45,13 +50,13 @@ const Login =()=>{
 
     if(loggedIn){
         console.log('Logged innn')
-        token = true;
     return(
             <Redirect to='/movie'/>
         )
-    }else{
+    }
         return (
             <div>
+            <nav id='header'></nav>
                 <form>
                 <nav className='warn'>
                     {error&&<nav className='error'>{error}</nav>}
@@ -74,7 +79,6 @@ const Login =()=>{
                 </form>
             </div>
         )
-    }
     
     };
 

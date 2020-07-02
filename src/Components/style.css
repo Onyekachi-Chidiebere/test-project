@@ -1,7 +1,10 @@
 #header {
-    width: 100%;
     height: 35px;
     background-color: cadetblue;
+    display:flex;
+    justify-content: flex-end;
+    padding:0 10px;
+    align-items: center
 }
 form {
     width: 60%;
@@ -45,6 +48,7 @@ input{
     background:white;
     box-sizing: border-box;
     box-shadow: 8px 5px 5px cadetblue;
+    outline:none;
 
 }
 .icon{
@@ -87,6 +91,17 @@ input{
     font-weight:bold;
     padding-top:3px
 }
+.logout{
+    color:white;
+    background:cadetblue;
+    border:none;
+    text-decoration: none;
+}
+img{
+    height:auto;
+    width:90%;
+    margin-left:5%
+}
 
 @media screen and (max-width: 680px) {
    form{
@@ -101,5 +116,6 @@ input{
    .submit{
        width:30%;
        margin: 2% 1% 3% 65%;
+
    }
 }

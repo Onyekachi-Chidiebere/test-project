@@ -64,6 +64,7 @@ const SignUp =()=>{
    }
     return (
         <div>
+            <nav id='header'></nav>
             <form>
                 <nav className='warn'>
                 {success&&<nav className='success'>{success}</nav>}
