@@ -2,73 +2,80 @@ import React,{useState,useEffect} from 'react';
 import {Person,Lock} from '@material-ui/icons';
 import { Redirect,Link } from 'react-router-dom';
 
-
-
+export let token = false
 const Login =()=>{
+    
     const [username,setUsername] = useState('');
     const [password,setPassword] = useState('');
     const [loggedIn,setLoggedIn] = useState(false);
+    const [success,setSuccess] = useState(false);
+    const [error,setError] = useState(false);
     
-    
-    const handleLogin =async(data)=>{
-        let url = "https://hoblist.com/movieList";
-        
-        let response = await fetch(url,{
-            method:'POST',
-            redirect:'follow',
-            credentials:'same-origin',
-            headers:{
-                'Content-Type':'application/json'
-            },
-            body:JSON.stringify({
-                category:'movies',
-                language:'telugu',
-                genre:'all',
-                sort:'voting'
-            })
-        })
-        let result = await response.text()
-        console.log(response, result)
-        let Users = JSON.parse(localStorage.getItem('Users'));
-        Users.forEach((user)=>{
-            if(user.name===username && user.password===password){
-                localStorage.setItem('Auth',JSON.stringify(true));
-                setLoggedIn(true)  
-                console.log('logged in')
-                 
-            }else{
-                localStorage.setItem('Auth',JSON.stringify(false)); 
-                console.log('not logged in')   
-            }
-        }) 
-                
-            
+    const handleLogin =async(e)=>{
+        e.preventDefault()
+    let Users = JSON.parse(localStorage.getItem('Users'));
+    if(!Users){
+        setError('Invalid User')
+        setTimeout(()=>{setError(false)},5000)
+        console.log('Invalid User')
+        return;
     }
-    if(loggedIn===true){
-        return(
+    let currentUser;
+     Users.filter((user)=>{
+         if(user.name===username){
+             currentUser=user;
+         }})
+       console.log({currentUser})
+    if(!currentUser){
+        setError('Invalid User')
+        setTimeout(()=>{setError(false)},5000)
+        console.log('Invalid User')
+        return;
+    }
+    if(currentUser.password!==password){
+        setError('Incorrect password')
+        setTimeout(()=>{setError(false)},5000)
+        console.log('Incorrect password')
+        return;
+    };
+    localStorage.setItem('Auth',JSON.stringify(true));
+    setLoggedIn(true)  
+    console.log('logged in')
+    }
+
+    if(loggedIn){
+        console.log('Logged innn')
+        token = true;
+    return(
             <Redirect to='/movie'/>
         )
+    }else{
+        return (
+            <div>
+                <form>
+                <nav className='warn'>
+                    {error&&<nav className='error'>{error}</nav>}
+                    </nav>
+                    <div className='contain'>
+                    <p className='input'>
+                        <Person className='icon'/>
+                        <input
+                        value={username} placeholder='Name' onChange={(e)=>{setUsername(e.target.value)}}
+                        />
+                    </p>
+                    <p className='input'>
+                        <Lock className='icon'/>
+                        <input value={password} type='password' placeholder='password' onChange={(e)=>{setPassword(e.target.value)}}/>
+                    </p>
+                    </div>
+                    <nav className='question'><i>don't have an account yet? </i><Link className='refer' to ='/signup'>Sign Up</Link></nav>
+                    <button className='submit' onClick={(e)=>{handleLogin(e)}}>Login</button>
+                    <footer class='footer'></footer>
+                </form>
+            </div>
+        )
     }
-    return (
-        <div>
-            <form>
-                <div className='contain'>
-                <p className='input'>
-                    <Person className='icon'/>
-                    <input
-                    value={username} placeholder='Name' onChange={(e)=>{setUsername(e.target.value)}}
-                    />
-                </p>
-                <p className='input'>
-                    <Lock className='icon'/>
-                    <input value={password} type='password' placeholder='password' onChange={(e)=>{setPassword(e.target.value)}}/>
-                </p>
-                </div>
-                <button className='submit' onClick={(e)=>{e.preventDefault();handleLogin(null)}}>Login</button>
-                <footer class='footer'></footer>
-            </form>
-        </div>
-    )
-};
+    
+    };
 
 export default Login;
