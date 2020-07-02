@@ -11,19 +11,24 @@ const Login =()=>{
     
     
     const handleLogin =async(data)=>{
-        let url = "https://hoblist.com/movieList?category=movies&language=telugu&genre=all&sort=voting";
+        let url = "https://hoblist.com/movieList";
         
         let response = await fetch(url,{
             method:'POST',
             redirect:'follow',
-            mode:'no-cors',
+            credentials:'same-origin',
             headers:{
-                'Content-Type':'application/x-www-form-urlencoded'
+                'Content-Type':'application/json'
             },
-            body:''
+            body:JSON.stringify({
+                category:'movies',
+                language:'telugu',
+                genre:'all',
+                sort:'voting'
+            })
         })
-
-        console.log(response)
+        let result = await response.text()
+        console.log(response, result)
         let Users = JSON.parse(localStorage.getItem('Users'));
         Users.forEach((user)=>{
             if(user.name===username && user.password===password){
